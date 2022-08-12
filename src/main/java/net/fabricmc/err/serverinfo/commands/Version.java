@@ -5,7 +5,7 @@ import net.fabricmc.err.serverinfo.ServerInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.server.command.ServerCommandSource;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.Command;
@@ -25,7 +25,7 @@ public class Version implements Command<ServerCommandSource> {
 
 	@Override
 	public int run(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(new LiteralText("version: " + get()), false);
+		context.getSource().sendFeedback(Text.literal("version: " + get()), false);
 		return Command.SINGLE_SUCCESS;
 	}
 }

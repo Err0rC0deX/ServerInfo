@@ -3,11 +3,11 @@ package net.fabricmc.err.serverinfo.commands;
 import java.io.File;
 import java.text.DecimalFormat;
 
-import net.minecraft.text.LiteralText;
 import net.fabricmc.err.serverinfo.util.ChatColour;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
-
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.context.CommandContext;
@@ -29,14 +29,9 @@ public class ServerInfo implements Command<ServerCommandSource> {
 	@Override
 	public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		ServerCommandSource source = context.getSource();
-
-		try{
-			source.getPlayer();
-			printColour(source);
-		}
-		catch (CommandSyntaxException exception) {
-			print(source);
-		}
+		ServerPlayerEntity player = source.getPlayer();
+		if(player != null) printColour(source);
+		else print(source);
 		
 		return Command.SINGLE_SUCCESS;
 	}
@@ -44,15 +39,15 @@ public class ServerInfo implements Command<ServerCommandSource> {
 	private static void print(ServerCommandSource source) {
 		double tickTime = source.getServer().getTickTime();
 		double tps = 1000.0 / tickTime;
-		source.sendFeedback(new LiteralText("TPS: " + tpsDisplayString(tps, false)), false);		
+		source.sendFeedback(Text.literal("TPS: " + tpsDisplayString(tps, false)), false);		
 
-		source.sendFeedback(new LiteralText("OS: " + System.getProperty("os.name")), false);
+		source.sendFeedback(Text.literal("OS: " + System.getProperty("os.name")), false);
 
 		File diskSpace = new File(FabricLoader.getInstance().getConfigDir() + "/..");
 		double free = diskSpace.getFreeSpace() / GIBIBYTE;
 		double total = diskSpace.getTotalSpace() / GIBIBYTE;
 		double percentage = ((total - free) / total) * 100;
-		source.sendFeedback(new LiteralText(
+		source.sendFeedback(Text.literal(
 			"Disk space used: " +
 			new DecimalFormat("#.##").format(total-free) + "/" +
 			new DecimalFormat("#.##").format(total) + " GB " +
@@ -62,29 +57,29 @@ public class ServerInfo implements Command<ServerCommandSource> {
 		free = Runtime.getRuntime().freeMemory()/1048576;
 		total = Runtime.getRuntime().totalMemory()/1048576;
 		percentage = ((total - free) / total) * 100;
-		source.sendFeedback(new LiteralText(
+		source.sendFeedback(Text.literal(
 			"RAM Used: " + 
 			new DecimalFormat("#.###").format(total-free) + "/" + new DecimalFormat("#.###").format(total) + " MB " +
 			 "(" + new DecimalFormat("#.##").format(percentage) + "% used)"
 		), false);
 
-		source.sendFeedback(new LiteralText("Number of cores: " + Runtime.getRuntime().availableProcessors()), false);
-		source.sendFeedback(new LiteralText("Java version: " + System.getProperty("java.version")), false);
-		source.sendFeedback(new LiteralText("Chunks loaded: " + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
+		source.sendFeedback(Text.literal("Number of cores: " + Runtime.getRuntime().availableProcessors()), false);
+		source.sendFeedback(Text.literal("Java version: " + System.getProperty("java.version")), false);
+		source.sendFeedback(Text.literal("Chunks loaded: " + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
 	}
 
 	private static void printColour(ServerCommandSource source) {
 		double tickTime = source.getServer().getTickTime();
 		double tps = 1000.0 / tickTime;
-		source.sendFeedback(new LiteralText(ChatColour.AQUA + "TPS: " + tpsDisplayString(tps, true)), false);
+		source.sendFeedback(Text.literal(ChatColour.AQUA + "TPS: " + tpsDisplayString(tps, true)), false);
 
-		source.sendFeedback(new LiteralText(ChatColour.AQUA + "OS: " + ChatColour.YELLOW + System.getProperty("os.name")), false);
+		source.sendFeedback(Text.literal(ChatColour.AQUA + "OS: " + ChatColour.YELLOW + System.getProperty("os.name")), false);
 
 		File diskSpace = new File(FabricLoader.getInstance().getConfigDir() + "/..");
 		double free = diskSpace.getFreeSpace() / GIBIBYTE;
 		double total = diskSpace.getTotalSpace() / GIBIBYTE;
 		double percentage = ((total - free) / total) * 100;
-		source.sendFeedback(new LiteralText(
+		source.sendFeedback(Text.literal(
 			ChatColour.AQUA + "Disk space used: " +
 			ChatColour.GREEN + new DecimalFormat("#.##").format(total-free) + ChatColour.YELLOW + "/" +	new DecimalFormat("#.##").format(total) + ChatColour.YELLOW + " GB " +
 			"(" + new DecimalFormat("#.##").format(percentage) + "% used)"
@@ -93,14 +88,14 @@ public class ServerInfo implements Command<ServerCommandSource> {
 		free = Runtime.getRuntime().freeMemory()/1048576;
 		total = Runtime.getRuntime().totalMemory()/1048576;
 		percentage = ((total - free) / total) * 100;
-		source.sendFeedback(new LiteralText(
+		source.sendFeedback(Text.literal(
 			ChatColour.AQUA + "RAM Used: " + 
 			ChatColour.GREEN + new DecimalFormat("#.###").format(total-free) + ChatColour.YELLOW + "/" + new DecimalFormat("#.###").format(total) + ChatColour.YELLOW + " MB " +
 			"(" + new DecimalFormat("#.##").format(percentage) + "% used)"
 		), false);
 		
-		source.sendFeedback(new LiteralText(ChatColour.AQUA + "Number of cores: " + ChatColour.YELLOW + Runtime.getRuntime().availableProcessors()), false);
-		source.sendFeedback(new LiteralText(ChatColour.AQUA + "Java version: " + ChatColour.YELLOW + System.getProperty("java.version")), false);
-		source.sendFeedback(new LiteralText(ChatColour.AQUA + "Chunks loaded: " + ChatColour.YELLOW + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
+		source.sendFeedback(Text.literal(ChatColour.AQUA + "Number of cores: " + ChatColour.YELLOW + Runtime.getRuntime().availableProcessors()), false);
+		source.sendFeedback(Text.literal(ChatColour.AQUA + "Java version: " + ChatColour.YELLOW + System.getProperty("java.version")), false);
+		source.sendFeedback(Text.literal(ChatColour.AQUA + "Chunks loaded: " + ChatColour.YELLOW + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
 	}
 }
