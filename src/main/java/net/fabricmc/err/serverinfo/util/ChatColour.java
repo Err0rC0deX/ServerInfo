@@ -1,6 +1,7 @@
 package net.fabricmc.err.serverinfo.util;
 
-public enum ChatColour {
+public enum ChatColour
+{
     BLACK('0', 0x00),
     DARK_BLUE('1', 0x1),
     DARK_GREEN('2', 0x2),
@@ -25,15 +26,17 @@ public enum ChatColour {
     RESET('r', 0x15);
 
     public static final char COLOR_CHAR = '\u00A7';
-	
+
     private final String data;
-    
-    private ChatColour(char code, int intCode) {
+
+    private ChatColour(char code, int intCode)
+	{
         this.data = new String(new char[] {COLOR_CHAR, code});
     }
 
     @Override
-    public String toString() {
+    public String toString()
+	{
         return data;
     }
 }

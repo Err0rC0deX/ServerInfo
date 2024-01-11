@@ -6,12 +6,14 @@ import net.fabricmc.err.serverinfo.commands.Commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServerInfo implements ModInitializer {
+public class ServerInfo implements ModInitializer
+{
 	public static final String MODID = "serverinfo";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize()
+	{
 		Commands.initialize();
 	}
 }

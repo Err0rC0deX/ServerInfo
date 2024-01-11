@@ -20,11 +20,11 @@
       "net.fabricmc.err.serverinfo.ServerInfo"
     ]
   },
-  
+
   "mixins": [],
 
   "depends": {
-    "fabricloader": ">=0.14.9",
+    "fabricloader": ">=0.15.3",
     "fabric": "*",
     "minecraft": "~1.19",
     "java": ">=17"

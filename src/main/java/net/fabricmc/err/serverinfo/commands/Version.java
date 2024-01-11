@@ -10,9 +10,10 @@ import net.minecraft.server.command.ServerCommandSource;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.Command;
 
-public class Version implements Command<ServerCommandSource> {
-
-	public static String get() {
+public class Version implements Command<ServerCommandSource>
+{
+	public static String get()
+	{
 		String versionString = "develop";
 		Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ServerInfo.MODID);
 		if(container.isPresent()) {
@@ -24,7 +25,8 @@ public class Version implements Command<ServerCommandSource> {
 	}
 
 	@Override
-	public int run(CommandContext<ServerCommandSource> context) {
+	public int run(CommandContext<ServerCommandSource> context)
+	{
 		context.getSource().sendFeedback(Text.literal("version: " + get()), false);
 		return Command.SINGLE_SUCCESS;
 	}
