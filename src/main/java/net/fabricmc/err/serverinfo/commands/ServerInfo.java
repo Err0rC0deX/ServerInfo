@@ -41,66 +41,66 @@ public class ServerInfo implements Command<ServerCommandSource>
 
 	private static void print(ServerCommandSource source)
 	{
-		double tickTime = source.getServer().getTickTime();
+		double tickTime = source.getServer().getAverageTickTime();
 		double tps = 1000.0 / tickTime;
-		source.sendFeedback(Text.literal("TPS: " + tpsDisplayString(tps, false)), false);
+		source.sendFeedback(() -> Text.literal("TPS: " + tpsDisplayString(tps, false)), false);
 
-		source.sendFeedback(Text.literal("OS: " + System.getProperty("os.name")), false);
+		source.sendFeedback(() ->  Text.literal("OS: " + System.getProperty("os.name")), false);
 
 		File diskSpace = new File(FabricLoader.getInstance().getConfigDir() + "/..");
-		double free = diskSpace.getFreeSpace() / GIBIBYTE;
-		double total = diskSpace.getTotalSpace() / GIBIBYTE;
-		double percentage = ((total - free) / total) * 100;
-		source.sendFeedback(Text.literal(
+		double freeDisk = diskSpace.getFreeSpace() / GIBIBYTE;
+		double totalDisk = diskSpace.getTotalSpace() / GIBIBYTE;
+		double diskPercentage = ((totalDisk - freeDisk) / totalDisk) * 100;
+		source.sendFeedback(() -> Text.literal(
 			"Disk space used: " +
-			new DecimalFormat("#.##").format(total-free) + "/" +
-			new DecimalFormat("#.##").format(total) + " GB " +
-			"(" + new DecimalFormat("#.##").format(percentage) + "% used)"
+			new DecimalFormat("#.##").format(totalDisk - freeDisk) + "/" +
+			new DecimalFormat("#.##").format(totalDisk) + " GB " +
+			"(" + new DecimalFormat("#.##").format(diskPercentage) + "% used)"
 		), false);
 
-		free = Runtime.getRuntime().freeMemory()/1048576;
-		total = Runtime.getRuntime().totalMemory()/1048576;
-		percentage = ((total - free) / total) * 100;
-		source.sendFeedback(Text.literal(
+		double freeRam = Runtime.getRuntime().freeMemory()/1048576;
+		double totalRam = Runtime.getRuntime().totalMemory()/1048576;
+		double ramPercentage = ((totalRam - freeRam) / totalRam) * 100;
+		source.sendFeedback(() -> Text.literal(
 			"RAM Used: " +
-			new DecimalFormat("#.###").format(total-free) + "/" + new DecimalFormat("#.###").format(total) + " MB " +
-			 "(" + new DecimalFormat("#.##").format(percentage) + "% used)"
+			new DecimalFormat("#.###").format(totalRam-freeRam) + "/" + new DecimalFormat("#.###").format(totalRam) + " MB " +
+			 "(" + new DecimalFormat("#.##").format(ramPercentage) + "% used)"
 		), false);
 
-		source.sendFeedback(Text.literal("Number of cores: " + Runtime.getRuntime().availableProcessors()), false);
-		source.sendFeedback(Text.literal("Java version: " + System.getProperty("java.version")), false);
-		source.sendFeedback(Text.literal("Chunks loaded: " + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
+		source.sendFeedback(() -> Text.literal("Number of cores: " + Runtime.getRuntime().availableProcessors()), false);
+		source.sendFeedback(() -> Text.literal("Java version: " + System.getProperty("java.version")), false);
+		source.sendFeedback(() -> Text.literal("Chunks loaded: " + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
 	}
 
 	private static void printColour(ServerCommandSource source)
 	{
-		double tickTime = source.getServer().getTickTime();
+		double tickTime = source.getServer().getAverageTickTime();
 		double tps = 1000.0 / tickTime;
-		source.sendFeedback(Text.literal(ChatColour.AQUA + "TPS: " + tpsDisplayString(tps, true)), false);
+		source.sendFeedback(() -> Text.literal(ChatColour.AQUA + "TPS: " + tpsDisplayString(tps, true)), false);
 
-		source.sendFeedback(Text.literal(ChatColour.AQUA + "OS: " + ChatColour.YELLOW + System.getProperty("os.name")), false);
+		source.sendFeedback(() -> Text.literal(ChatColour.AQUA + "OS: " + ChatColour.YELLOW + System.getProperty("os.name")), false);
 
 		File diskSpace = new File(FabricLoader.getInstance().getConfigDir() + "/..");
-		double free = diskSpace.getFreeSpace() / GIBIBYTE;
-		double total = diskSpace.getTotalSpace() / GIBIBYTE;
-		double percentage = ((total - free) / total) * 100;
-		source.sendFeedback(Text.literal(
+		double freeDisk = diskSpace.getFreeSpace() / GIBIBYTE;
+		double totalDisk = diskSpace.getTotalSpace() / GIBIBYTE;
+		double diskPercentage = ((totalDisk - freeDisk) / totalDisk) * 100;
+		source.sendFeedback(() -> Text.literal(
 			ChatColour.AQUA + "Disk space used: " +
-			ChatColour.GREEN + new DecimalFormat("#.##").format(total-free) + ChatColour.YELLOW + "/" +	new DecimalFormat("#.##").format(total) + ChatColour.YELLOW + " GB " +
-			"(" + new DecimalFormat("#.##").format(percentage) + "% used)"
+			ChatColour.GREEN + new DecimalFormat("#.##").format(totalDisk-freeDisk) + ChatColour.YELLOW + "/" +	new DecimalFormat("#.##").format(totalDisk) + ChatColour.YELLOW + " GB " +
+			"(" + new DecimalFormat("#.##").format(diskPercentage) + "% used)"
 		), false);
 
-		free = Runtime.getRuntime().freeMemory()/1048576;
-		total = Runtime.getRuntime().totalMemory()/1048576;
-		percentage = ((total - free) / total) * 100;
-		source.sendFeedback(Text.literal(
+		double free = Runtime.getRuntime().freeMemory()/1048576;
+		double total = Runtime.getRuntime().totalMemory()/1048576;
+		double ramPercentage = ((total - free) / total) * 100;
+		source.sendFeedback(() -> Text.literal(
 			ChatColour.AQUA + "RAM Used: " +
 			ChatColour.GREEN + new DecimalFormat("#.###").format(total-free) + ChatColour.YELLOW + "/" + new DecimalFormat("#.###").format(total) + ChatColour.YELLOW + " MB " +
-			"(" + new DecimalFormat("#.##").format(percentage) + "% used)"
+			"(" + new DecimalFormat("#.##").format(ramPercentage) + "% used)"
 		), false);
 
-		source.sendFeedback(Text.literal(ChatColour.AQUA + "Number of cores: " + ChatColour.YELLOW + Runtime.getRuntime().availableProcessors()), false);
-		source.sendFeedback(Text.literal(ChatColour.AQUA + "Java version: " + ChatColour.YELLOW + System.getProperty("java.version")), false);
-		source.sendFeedback(Text.literal(ChatColour.AQUA + "Chunks loaded: " + ChatColour.YELLOW + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
+		source.sendFeedback(() -> Text.literal(ChatColour.AQUA + "Number of cores: " + ChatColour.YELLOW + Runtime.getRuntime().availableProcessors()), false);
+		source.sendFeedback(() -> Text.literal(ChatColour.AQUA + "Java version: " + ChatColour.YELLOW + System.getProperty("java.version")), false);
+		source.sendFeedback(() -> Text.literal(ChatColour.AQUA + "Chunks loaded: " + ChatColour.YELLOW + source.getWorld().getChunkManager().getLoadedChunkCount()), false);
 	}
 }
